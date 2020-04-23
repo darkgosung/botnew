@@ -965,23 +965,18 @@ while True:
 		print ('] ', ctx.message.channel.name, ' [')
 		
 		if basicSetting[7] == "":
-			inidata_textCH = repo.get_contents("test_setting.ini")
-			file_data_textCH = base64.b64decode(inidata_textCH.content)
-			file_data_textCH = file_data_textCH.decode('utf-8')
-			inputData_textCH = file_data_textCH.split('\n')
-			
-			for i in range(len(inputData_textCH)):
-				if inputData_textCH[i] == 'textchannel = \r':
-					inputData_textCH[i] = 'textchannel = ' + str(channel) + '\r'
+			inidata_text = open('test_setting.ini', 'r', encoding = 'utf-8')
+			inputData_text = inidata_text.readlines()
+			inidata_text.close()
+		
+			inidata_text = open('test_setting.ini', 'w', encoding = 'utf-8')				
+			for i in range(len(inputData_text)):
+				if inputData_text[i] == 'textchannel = \n':
+					inputData_text[i] = 'textchannel = ' +str(channel) + '\n'
 					basicSetting[7] = channel
-					#print ('======', inputData_text[i])
 			
-			result_textCH = '\n'.join(inputData_textCH)
-			
-			#print (result_textCH)
-			
-			contents = repo.get_contents("test_setting.ini")
-			repo.update_file(contents.path, "test_setting", result_textCH, contents.sha)
+			inidata_text.writelines(inputData_text)
+			inidata_text.close()
 
 		await ctx.send('< 텍스트채널 [' + ctx.message.channel.name + '] 접속완료 >\n< 음성채널 접속 후 [소환] 명령을 사용 하세요 >', tts=False)
 		
